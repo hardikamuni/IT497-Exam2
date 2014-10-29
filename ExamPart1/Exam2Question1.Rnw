@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<echo=FALSE, results=hide>>=
+
+library(plyr)
+
+read_url <- url("http://www.itk.ilstu.edu/faculty/jrwolf/spendingdata.txt")
+data_source     <- readLines(read_url, skip = 500)
+CheckData <- data_source[32:34]
+head(CheckData,15)
+
+new.text.1 <- gsub(pattern = ",",
+                   replacement = " ",
+                   x = CheckData,
+                   ignore.case = TRUE,
+                   perl = FALSE,
+                   fixed = FALSE,
+                   useBytes = FALSE)
+
+new.text.2 <- gsub(pattern = "Average Number of Purchases",
+                   replacement = "AverageNumberofPurchases",
+                   x = new.text.1,
+                   ignore.case = TRUE,
+                   perl = FALSE,
+                   fixed = FALSE,
+                   useBytes = FALSE)
+                   
+new.text.3 <- gsub(pattern = "Average Transaction Value",
+                   replacement = "AverageTransactionValue",
+                   x = new.text.2,
+                   ignore.case = TRUE,
+                   perl = FALSE,
+                   fixed = FALSE,
+                   useBytes = FALSE)
+
+
+data.strlist<-strsplit(new.text.3, " ") 
+
+
+data.mat<-do.call(rbind,data.strlist)
+
+
+CheckData.new <- as.data.frame(data.mat[2:3,])
+
+CheckData.new <- rename(CheckData.new, c("V1"="Type", "V2"="Cash", "V3"="Check","V4"="Credit","V5"="Debit","V6"="Electronic","V7"="Other","V8"="Total"))
+
+CheckData.new <- CheckData.new[1,]
+
+CheckData.new$Cash<-as.numeric(as.character(CheckData.new$Cash))
+CheckData.new$Check<-as.numeric(as.character(CheckData.new$Check))
+CheckData.new$Credit<-as.numeric(as.character(CheckData.new$Credit))
+CheckData.new$Debit<-as.numeric(as.character(CheckData.new$Debit))
+CheckData.new$Electronic<-as.numeric(as.character(CheckData.new$Electronic))
+CheckData.new$Other<-as.numeric(as.character(CheckData.new$Other))
+CheckData.new$Total<-as.numeric(as.character(CheckData.new$Total))
+
+@
+\textbf{Cash is the most used retail payment instrument.}
+
+In October 2012, the average American consumer had \Sexpr{round(CheckData.new$Total[1])} transactions, including purchases and bill payments, and  \Sexpr{floor(CheckData.new$Cash[1])} of these \Sexpr{round(CheckData.new$Total[1])}. At \Sexpr{floor((round(CheckData.new$Cash[1])/round(CheckData.new$Total[1]))*100)}  percent, cash makes up the single largest share of consumer transaction activity, followed by debit cards at \Sexpr{round(((CheckData.new$Debit[1])/(CheckData.new$Total[1]))*100)} percent, and credit cards at \Sexpr{round(((CheckData.new$Credit[1])/(CheckData.new$Total[1]))*100)} percent. Electronic methods (online banking bill pay and bank account number payments) account for \Sexpr{round(((CheckData.new$Electronic[1])/(CheckData.new$Total[1]))*100)} percent, while checks make up \Sexpr{round(((CheckData.new$Check[1])/(CheckData.new$Total[1]))*100)} percent.All other payments represent less than \Sexpr{round(((CheckData.new$Other[1])/(CheckData.new$Total[1]))*100)} percent of monthly transaction activity, with text and mobile payments barely registering at less than one half of one percent. 
+
+
+
+\end{document}

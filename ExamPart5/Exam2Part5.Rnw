@@ -1,0 +1,40 @@
+\documentclass{article}
+
+\begin{document}
+\title{Comparison between McDonald and Wendy}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+<<echo=FALSE,results=hide>>=
+library(RCurl)
+data <- getURL("https://raw.githubusercontent.com/jrwolf/IT497/master/NYCHealthData.csv")
+mydata <- read.csv(textConnection(data))
+head(mydata)
+
+mydata$DBA <- as.character(mydata$DBA)
+mydata$DBA[mydata$DBA == "MCDONALD'S"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALDS"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALD'S (MACY'S 7TH FL)"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALD"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALDS RESTAURANT"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALD'S RESTAURANT"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALD'S RESTAURANT #3391"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALD AVENUE DINER"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALDS (#11542)"] <- "McDonald"
+mydata$DBA[mydata$DBA == "MCDONALDS 17754"] <- "McDonald"
+mydata$DBA[mydata$DBA == "McDonald's"] <- "McDonald"
+mydata$DBA[mydata$DBA == "Mcdonald's"] <- "McDonald"
+mydata$DBA[mydata$DBA == "WENDY'S OLD FASHIONED HAMBURGERS"] <- "WENDY'S"
+mydata$DBA[mydata$DBA == "Wendy's Old Fashioned Hamburgers"] <- "WENDY'S"
+head(mydata)
+@
+
+According to the graph below, it clearly shows that Wendy is cleaner than McDonald. Wendy has received only A and B grade more whereas McDonald has also received Z grade which Wendy has never received. So, Wendy is cleaner than McDonald.
+
+<<label=fig1,fig=TRUE,echo=FALSE>>=
+library(ggplot2)
+ggplot(data=mydata, aes(x=GRADEDATE, y=CURRENTGRADE, fill=DBA))+
+  geom_bar(stat="identity", position=position_dodge())
+@
+
+\end{document}

@@ -1,0 +1,24 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\section{Steps walked by Miles walked}
+
+<<fig=TRUE>>=
+library(devtools)
+# Run the source code to create the scatter plot
+source_url("https://raw.githubusercontent.com/hardikamuni/IT497-Exam2/master/Exam3Part1.R")
+@
+
+The above scatter plot shows the number of steps walked  to the number of miles walked. We use plot function for plotting a scatter plot showing X-axis , Y-axis and names of both the axis. 
+
+\section{Miles walked by Steps walked}
+<<fig=TRUE>>=
+
+source('~/Exam3Part2.R')
+
+@
+
+The above scatter plot is for total miles walked bby total number of steps walked. 
+
+\end{document}

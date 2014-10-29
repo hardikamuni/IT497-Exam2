@@ -1,0 +1,30 @@
+Exam Part 4
+
+```{r}
+library(RCurl)
+library(knitr)
+data <- getURL("https://raw.githubusercontent.com/jrwolf/IT497/master/databreaches.csv")
+mydata <- read.csv(textConnection(data))
+
+data.gr<- mydata[-grep("2008",mydata$YEAR),]
+mydata.gr<-data.gr[-grep("2007",data.gr$YEAR),]
+mydata.gr<-mydata.gr[-grep("2006",mydata.gr$YEAR),]
+mydata.gr<-mydata.gr[-grep("2005",mydata.gr$YEAR),]
+mydata.gr<-mydata.gr[-grep("2004",mydata.gr$YEAR),]
+mydata.gr<-mydata.gr[-grep("2003",mydata.gr$YEAR),]
+summary(mydata.gr)
+
+```
+
+This graph shows number of data breaches every year. The graph shows that the number of data breaches were in the year 2011.
+```{r fig.width=7, fig.height=6}
+library(ggplot2)
+ggplot(data=mydata.gr, aes(x=YEAR, y=RECORDS))+geom_bar(stat="identity", position=position_dodge())
+
+```
+
+This graph shows number of breaches by method every year. The graph shows that the acker method is greatest on records in the year 2011. 
+```{r fig.width=7, fig.height=6}
+ggplot(data=mydata.gr, aes(x=YEAR, y=RECORDS, group=METHOD, fill=METHOD))+geom_bar(stat="identity", position=position_dodge())
+```
+
